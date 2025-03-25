@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, FlatList } from 'react-native';
-import AlertCard from '../components/AlertCard';
+import AlertCard from '../components/cards/AlertCard';
 import ScreenHeader from '../components/ScreenHeader';
 import { Primary, Background, TextDark, RedZone, OrangeZone, YellowZone } from '../constants/colours';
 

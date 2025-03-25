@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from 'react-native';
-import TaxiCard from '../components/TaxiCard';
+import TaxiCard from '../components/cards/TaxiCard';
 import ScreenHeader from '../components/ScreenHeader';
 import { Primary, Secondary, TextDark, TextLight } from '../constants/colours';
 

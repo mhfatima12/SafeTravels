@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+<<<<<<< HEAD[]()
 # SafeTravels
 =======
 # Welcome to your Expo app 👋

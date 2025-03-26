@@ -1,4 +1,3 @@
-// components/modals/EmergencyModal.js
 import React from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 

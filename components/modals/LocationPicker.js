@@ -3,6 +3,7 @@ import { Modal, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function LocationPicker({ visible, onClose, onLocationSelect }) {
+  // unused for now -> to be implemented into manual location picker in report crime form
   return (
     <Modal visible={visible} animationType="slide" transparent={true}>
       <View style={styles.overlay}>

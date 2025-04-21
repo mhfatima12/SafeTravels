@@ -1,22 +1,98 @@
-import React from 'react';
+// react
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Primary, YellowZone, OrangeZone, RedZone, TextLight, TextDark } from '../constants/colours'
+
+// expo
+import * as Location from 'expo-location';
+
+// firebase
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
+
+// consts
+import { Primary, YellowZone, OrangeZone, RedZone, TextLight, TextDark } from '../constants/colours';
+
+// components
 import ScreenHeader from '../components/ScreenHeader';
+import SafetyLegend from '../components/modals/SafetyLedgend';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const header = 'SafeTravels'
+  const header = 'SafeTravels';
+
+  const [location, setLocation] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [alerts, setAlerts] = useState([]);
+
+  // request user to share location, once shared save lon&lat and set to city, country
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        return;
+      }
+
+      let loc = await Location.getCurrentPositionAsync({});
+      setLocation(loc.coords);
+
+      let reverseGeo = await Location.reverseGeocodeAsync({
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+      });
+
+      if (reverseGeo.length > 0) {
+        setAddress(reverseGeo[0]);
+      }
+    })();
+  }, []);
+
+  // check fb for crimes in past 24 hrs 
+  useEffect(() => {
+    const fetchRecentCrimes = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, 'crimeReports'));
+        const now = new Date();
+        const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+        const crimeCount = {};
+
+        snapshot.docs.forEach((doc) => {
+          const data = doc.data();
+          const reportTime = new Date(data.time);
+          if (reportTime >= last24h) {
+            data.types.forEach((type) => {
+              crimeCount[type] = (crimeCount[type] || 0) + 1;
+            });
+          }
+        });
+
+        const alertArray = Object.entries(crimeCount).map(([type, count]) => ({
+          type,
+          count,
+        }));
+
+        setAlerts(alertArray);
+      } catch (error) {
+        console.error('Error fetching alerts:', error);
+      }
+    };
+
+    fetchRecentCrimes();
+  }, []);
+
+  const latestAlert = alerts[0];
 
   return (
     <View style={styles.container}>
-
       <ScreenHeader header={header} />
 
       {/* Welcome Section */}
       <View style={styles.welcomeSection}>
         <Text style={styles.welcomeText}>Welcome to</Text>
-        <Text style={styles.locationText}>Dublin, Ireland</Text>
+        <Text style={styles.locationText}>
+          {address ? `${address.city || address.region}, ${address.country}` : 'Loading...'}
+        </Text>
       </View>
 
       <View style={{ padding: 20 }}>
@@ -25,6 +101,9 @@ export default function HomeScreen() {
           <Text style={styles.safetyText}>Current Area Safety:</Text>
           <View style={styles.safetyScore}>
             <Text style={styles.safetyScoreText}>7/10</Text>
+          </View>
+          <View style={{ marginLeft: 110 }}>
+            <SafetyLegend />
           </View>
         </View>
 
@@ -60,13 +139,25 @@ export default function HomeScreen() {
         </TouchableOpacity>
 
         {/* Local Alert */}
-        <View style={styles.alertBox}>
-          <Text style={styles.alertIcon}>❗</Text>
-          <View>
-            <Text style={styles.alertTitle}>Local Alert</Text>
-            <Text style={styles.alertText}>Pickpocketing reported (2 incidents in last 24 hours)</Text>
+        {latestAlert ? (
+          <View style={styles.alertBox}>
+            <Text style={styles.alertIcon}>❗</Text>
+            <View>
+              <Text style={styles.alertTitle}>Local Alert</Text>
+              <Text style={styles.alertText}>
+                {latestAlert.type.charAt(0).toUpperCase() + latestAlert.type.slice(1)} reported ({latestAlert.count} incident{latestAlert.count > 1 ? 's' : ''} in last 24 hrs)
+              </Text>
+            </View>
           </View>
-        </View>
+        ) : (
+          <View style={styles.alertBox}>
+            <Text style={styles.alertIcon}>❗</Text>
+            <View>
+              <Text style={styles.alertTitle}>Local Alert</Text>
+              <Text style={styles.alertText}>No incidents in the last 24 hours</Text>
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );

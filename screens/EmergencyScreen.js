@@ -1,5 +1,8 @@
+// react
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+
+// components
 import EmergencyButton from '../components/buttons/EmergencyButton'
 import ScreenHeader from '../components/ScreenHeader';
 import EmergencyModal from '../components/modals/EmergencyModal'
@@ -9,6 +12,7 @@ export default function EmergencyScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
+  // click button to call
   const handlePress = (service) => {
     setModalMessage(`${service} is being called`);
     setModalVisible(true);

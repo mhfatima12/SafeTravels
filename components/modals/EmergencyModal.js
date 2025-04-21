@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 export default function EmergencyModal({ visible, onClose, message }) {
+  // mimic a phone call
   return (
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.overlay}>

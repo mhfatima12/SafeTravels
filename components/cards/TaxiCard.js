@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 export default function TaxiCard({ name, surname, seats, vehicle, departTime }) {
 
   const getInitials = (name, surname) => {
@@ -22,7 +22,7 @@ export default function TaxiCard({ name, surname, seats, vehicle, departTime }) 
           <Text style={styles.vehicleEmoji}>🚗</Text>
           <Text style={styles.vehicleDetails}>{vehicle}</Text>
         </View>
-        <TouchableOpacity style={styles.requestButton}>
+        <TouchableOpacity style={styles.requestButton} onPress={() => Alert.alert('Ride Requested')}>
           <Text style={styles.requestButtonText}>Request</Text>
         </TouchableOpacity>
       </View>

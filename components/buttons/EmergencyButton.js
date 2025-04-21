@@ -1,7 +1,9 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
+
 export default function EmergencyButton() {
+  // doesn't do anything for now
   return (
     <TouchableOpacity style={styles.button}>
       <Text style={styles.text}>SOS</Text>

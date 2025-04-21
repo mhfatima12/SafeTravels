@@ -1,12 +1,16 @@
+// react
 import {React, useState} from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from 'react-native';
+
+// components
 import TaxiCard from '../components/cards/TaxiCard';
 import ScreenHeader from '../components/ScreenHeader';
 import { Primary, Secondary, TextDark, TextLight } from '../constants/colours';
 
+// hard code rides for now
 const rideShares = [
   { id: '1', name: 'Jack to Trinity College Dublin', surname: 'Kelly', seats: '3 seats available', departTime: '5 mins', vehicle: 'Black Toyota Prius', userLocation: 'Dublin Zoo', destination: 'Trinity College Dublin' },
-  { id: '2', name: 'Mia to Museum', surname: 'Murphy', seats: '2 seats available', departTime: '10 mins', vehicle: 'Red Honda Civic', userLocation: 'Pheonix Park', destination: 'Museum' },
+  { id: '2', name: 'Mia to Museum', surname: 'Murphy', seats: '2 seats available', departTime: '10 mins', vehicle: 'Red Honda Civic', userLocation: 'Phoenix Park', destination: 'Museum' },
   { id: '3', name: 'John to Airport', surname: 'Kennedy', seats: '1 seat available', departTime: '30 mins', vehicle: 'Grey Audi A1', userLocation: 'Hueston Train Station', destination: 'Airport' },
   { id: '4', name: 'Sophie to South Bus Terminal', surname: 'Boyle', seats: '4 seats available', departTime: '45 mins', vehicle: 'White Opel Corsa', userLocation: '', destination: 'South Bus Terminal' },
 ];
@@ -19,6 +23,7 @@ export default function TaxiShareScreen() {
   const [selectedDate, setSelectedDate] = useState(null);
   const header = "Taxi Share";
 
+  // find taxis foing to destination
   const handleFindTaxiPartners = () => {
     const filtered = rideShares.filter(ride =>
       ride.destination.toLowerCase().includes(destination.toLowerCase())
@@ -31,6 +36,7 @@ export default function TaxiShareScreen() {
       <ScreenHeader header={header} />
 
       <View style={{ padding: 20 }}>
+        {/* Enter current location */}
       <Text style={styles.label}>Where are you now?</Text>
         <TextInput
           style={styles.input}
@@ -39,6 +45,7 @@ export default function TaxiShareScreen() {
           value={userLocation}
           onChangeText={setUserLocation}
         />
+        {/* Enter where you're going */}
         <Text style={styles.label}>Where are you going?</Text>
         <TextInput
           style={styles.input}
@@ -48,6 +55,7 @@ export default function TaxiShareScreen() {
           onChangeText={setDestination}
         />
 
+        {/* When you want to go */}
         <Text style={styles.label}>When are you traveling?</Text>
         <View style={styles.row}>
         <TouchableOpacity 
@@ -92,6 +100,7 @@ export default function TaxiShareScreen() {
           </TouchableOpacity>
         </View>
 
+        {/* Request and show available rides */}
         <TouchableOpacity style={styles.findButton} onPress={handleFindTaxiPartners}>
           <Text style={styles.findButtonText}>Find Taxi Partners</Text>
         </TouchableOpacity>
@@ -135,23 +144,24 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    flexWrap: 'wrap', // Prevents overlapping
+    flexWrap: 'wrap', 
     justifyContent: 'space-between',
-    gap: 8, // Adds spacing between buttons
+    gap: 8, 
     marginVertical: 10,
   },
   selectedButton: {
     backgroundColor: Primary,
-    padding: 7,
+    padding: 8,
     borderRadius: 8,
-    flex: 0.24,
-    alignItems: 'center',
+    flex: 0.4,
+  alignItems: 'center',
     marginRight: 1,
 
   },
   selectedText: {
     fontWeight: 'bold',
     color: TextLight,
+    fontSize: 14
   },
   unselectedButton: {
     backgroundColor: TextLight,
@@ -159,12 +169,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: Secondary,
-    flex: 0.24,
+    flex: 0.35,
     alignItems: 'center',
     marginLeft: 1,
   },
   unselectedText: {
     color: TextDark,
+    fontSize: 13
   },
   findButton: {
     backgroundColor: Primary,
